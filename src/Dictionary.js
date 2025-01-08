@@ -1,58 +1,59 @@
-import React, { useState } from 'react';
-
-const dictionaryData = [
-  { word: 'Component', meaning: 'A reusable piece of code in a UI application.' },
-  { word: 'React', meaning: 'A JavaScript library for building user interfaces.' },
-  { word: 'State', meaning: 'A built-in object used to store data in React components.' },
-];
+import React, { useState } from "react";
 
 const Dictionary = () => {
-  const [searchTerm, setSearchTerm] = useState(''); 
-  const [result, setResult] = useState(''); 
-  const [error, setError] = useState(''); 
+  const [searchWord, setSearchWord] = useState("");
+  const [wordMeaning, setWordMeaning] = useState("");
 
-  const handleSearch = () => {
-    if (!searchTerm.trim()) {
-      setResult('');
-      setError('Word not found in the dictionary.');
-      return;
+  const findInDictionary = () => {
+    setWordMeaning("");
+
+    const dictionary = [
+      { word: "React", meaning: "A JavaScript library for building user interfaces.",},
+      { word: "Component", meaning: "A reusable building block in React." },
+      { word: "State", meaning: "An object that stores data for a component." },
+    ];
+
+    const lowerCaseSearchedWords = searchWord.toLowerCase();
+
+    for (const entry of dictionary) {
+      const lowerCaseDictionaryWords = entry.word.toLowerCase();
+      if (lowerCaseSearchedWords === lowerCaseDictionaryWords) {
+        setWordMeaning(entry.meaning);
+        return;
+      }
     }
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    const foundWord = dictionaryData.find(
-      entry => entry.word.toLowerCase() === lowerCaseSearchTerm
-    );
-  
-    if (foundWord) {
-      setResult(foundWord.meaning);
-      setError('');
-    } else {
-      setResult('');
-      setError('Word not found in the dictionary.');
-    }
+
+    setWordMeaning((prevWordMeaning) => {
+      if (prevWordMeaning === "") {
+        return "Word not found in the dictionary.";
+      }
+      return prevWordMeaning;
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    findInDictionary();
+  };
+
+  const handleChange = (e) => {
+    setSearchWord(e.target.value);
   };
 
   return (
-    <div style={{ textAlign: 'center', padding: '20px' }}>
+    <div>
       <h1>Dictionary App</h1>
-      
-      <div>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Enter word to search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ padding: '8px', fontSize: '16px', width: '300px', marginRight: '10px' }}
+          placeholder="Search for a word..."
+          value={searchWord}
+          onChange={handleChange}
         />
-        
-        <button onClick={handleSearch} style={{ padding: '8px 16px', fontSize: '16px' }}>
-          Search
-        </button>
-      </div>
-
-      <div style={{ marginTop: '20px' }}>
-        {result && <div><h3>Definition:</h3><p>{result}</p></div>}
-        {error && <div style={{ color: 'red' }}>{error}</div>}
-      </div>
+        <button type="submit">Submit</button>
+      </form>
+      <h3>Definition:</h3>
+      <p>{wordMeaning}</p>
     </div>
   );
 };
