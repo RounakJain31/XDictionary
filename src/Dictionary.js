@@ -12,23 +12,28 @@ const Dictionary = () => {
   const [error, setError] = useState(''); 
 
   const handleSearch = () => {
+    if (!searchTerm.trim()) {
+      setResult('');
+      setError('Word not found in the dictionary.');
+      return;
+    }
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     const foundWord = dictionaryData.find(
       entry => entry.word.toLowerCase() === lowerCaseSearchTerm
     );
-
+  
     if (foundWord) {
       setResult(foundWord.meaning);
-      setError(''); 
+      setError('');
     } else {
-      setResult(''); 
-      setError('Word not found in the dictionary.'); 
+      setResult('');
+      setError('Word not found in the dictionary.');
     }
   };
 
   return (
     <div style={{ textAlign: 'center', padding: '20px' }}>
-      <h1>Dictionary</h1>
+      <h1>Dictionary App</h1>
       
       <div>
         <input
@@ -45,7 +50,7 @@ const Dictionary = () => {
       </div>
 
       <div style={{ marginTop: '20px' }}>
-        {result && <div><h3>Meaning:</h3><p>{result}</p></div>}
+        {result && <div><h3>Definition:</h3><p>{result}</p></div>}
         {error && <div style={{ color: 'red' }}>{error}</div>}
       </div>
     </div>
